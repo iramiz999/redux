@@ -21,10 +21,25 @@ export const postsSlice = createSlice({
 
         // console.log(action)
         state.items.pop(action.payload)
+    },
 
 
+    updatePost : (state,action) => {
+      state.items.map((item) => {
+          if (item.id == action.payload.id) {
+            item.title = action.payload.title
+            item.description = action.payload.description
+          }
+
+        }
+      )
       
     }
+    
+  
+    
+
+
     
     
 
@@ -35,5 +50,5 @@ export const postsSlice = createSlice({
 // Action creators are generated for each case reducer function
 
 
-export const { addPost ,deletePost } = postsSlice.actions
+export const { addPost ,deletePost,updatePost } = postsSlice.actions
 export default postsSlice.reducer

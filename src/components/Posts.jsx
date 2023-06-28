@@ -1,13 +1,19 @@
 
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { addPost, deletePost } from "../redux/postsSlice";
+import { addPost, deletePost, updatePost } from "../redux/postsSlice";
 
 function Posts() {
 
     const dispatch = useDispatch()
     const [title, settitle] = useState("");
     const [description, setdescription] = useState("");
+    const [edit, setisEdit] = useState(false);
+    const [id, setid] = useState(null);
+
+    const [updateTitle, setupdateTitle] = useState("");
+    const [updateDesc, setupdateDesc] = useState("");
+
     // console.log(title,description)
 
     const posts = useSelector((state) => state.posts.items)
@@ -34,7 +40,7 @@ function Posts() {
                     type="text" placeholder="POST DESC" />
                 <button
                     onClick={() => {
-                        dispatch(addPost({ id: 1, title, description }))
+                        dispatch(addPost({ id: posts.length + 1, title, description }))
                     }}
 
                 >ADD POST</button>
@@ -46,13 +52,48 @@ function Posts() {
                 {posts.length > 0 ?
 
                     posts.map(post =>
-                        <div className="post">
+                        <div key={post.id} className="post">
                             <h2>{post.title}</h2>
                             <p>{post.description}</p>
-                            <button>EDIT</button>
+                            <button onClick={() => {
+                                setisEdit(true)
+                                setid(post.id)
+
+                            }
+
+
+
+                            } > EDIT</button>
                             <button onClick={() => dispatch(deletePost())} >DELETE</button>
+
+                            <br />
+                            {edit && id == post.id && (
+                                <>
+                                    <input
+                                        onChange={(e) => setupdateTitle(e.target.value)}
+
+                                        type="text" placeholder="Updated Title" />
+                                    <input
+                                        onChange={(e) => setupdateDesc(e.target.value)} type="text" placeholder="Updated Desc" />
+                                    <button
+                                        onClick={() => {
+                                            dispatch(updatePost({
+                                                id: post.id,
+                                                title: updateTitle,
+                                                description: updateDesc
+                                            }))
+                                            setisEdit(false)
+                                        }}
+                                       
+                                    >UPDATE</button>
+
+                                </>
+
+
+                            )}
                         </div>
                     ) : 'THERE IS NO POSTS'}
+
 
             </div>
 
